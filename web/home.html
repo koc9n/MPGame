@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VK radio</title>
+    <script type="text/javascript" src="resources/js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        var currAudioId = -1;
+        var playAudio = function () {
+            $.ajax({
+                url:"https://api.vk.com/method/status.get?uid=4908725&access_token=a0afb443f0a69e8aa05fa69fb3a0021bfaaa032a032f43df0a1ed0ae4ecb2d0008f2321",
+                dataType: 'jsonp', // Notice! JSONP <-- P (lowercase)
+                success:function(json){
+                    if(currAudioId != json.response.audio.aid)   {
+                        var _audio = $("#audio");
+                        _audio.attr("title",json.response.text);
+                        _audio.attr("src",json.response.audio.url);
+                        currAudioId = json.response.audio.aid;
+                    }
+                },
+                error:function(){
+                    alert("Error");
+                }
+            });
+            setTimeout(playAudio,10000);
+        }
+        $(document).ready(function(){
+            playAudio();
+        });
+    </script>
+</head>
+<body>
+<!-- Put this div tag to the place, where Auth block will be -->
+<div id="vk_auth"></div>
+<div>
+    <span onclick="playAudio()">Play</span>
+    <audio title="" id="audio" controls="" autoplay="" name="audio" src="" type="audio/mpeg"/>
+</div>
+
+</body>
+</html>
